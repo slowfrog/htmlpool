@@ -63,24 +63,26 @@ var solve = function(dic, lis) {
   while (!is_empty(status)) {
     var new_status = {};
     for (state in status) {
-      var obj = status[state];
-      if (obj.words.length == 1) {
-        if ((obj.score > maxscore) ||
-            ((obj.score == maxscore) && (wordpos[obj.words[0]] < wordpos[maxword]))) {
-          maxscore = obj.score;
-          maxword = obj.words[0];
-        }
-      } else {
-        var tmp = next_letter(obj.words, obj.letters);
-        for (i = 0; i < obj.words.length; ++i) {
-          w = obj.words[i];
-          var tmp2 = play_letter(state, w, tmp.letter);
-          if (!new_status[tmp2.state]) {
-            new_status[tmp2.state] = {score: obj.score + (tmp2.lose ? 1 : 0),
-                                      letters: tmp.next_letters,
-                                      words: [w]};
-          } else {
-            new_status[tmp2.state].words.push(w);
+      if (status.hasOwnProperty(state)) {
+        var obj = status[state];
+        if (obj.words.length == 1) {
+          if ((obj.score > maxscore) ||
+              ((obj.score == maxscore) && (wordpos[obj.words[0]] < wordpos[maxword]))) {
+            maxscore = obj.score;
+            maxword = obj.words[0];
+          }
+        } else {
+          var tmp = next_letter(obj.words, obj.letters);
+          for (i = 0; i < obj.words.length; ++i) {
+            w = obj.words[i];
+            var tmp2 = play_letter(state, w, tmp.letter);
+            if (!new_status[tmp2.state]) {
+              new_status[tmp2.state] = {score: obj.score + (tmp2.lose ? 1 : 0),
+                                        letters: tmp.next_letters,
+                                        words: [w]};
+            } else {
+              new_status[tmp2.state].words.push(w);
+            }
           }
         }
       }
